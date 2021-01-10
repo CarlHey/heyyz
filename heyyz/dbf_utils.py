@@ -4,9 +4,9 @@ import dbfread
 pt = heyy.pathtool
 
 
-def dbf2objs(filename, encoding='gbk'):
+def dbf2objs(filename, encoding='gbk', ignore_case=True):
     dbf = dbfread.DBF(filename, encoding)
-    objs = [heyy.json2obj(r) for r in dbf.records]
+    objs = [heyy.json2obj(r, ignore_case=ignore_case) for r in dbf.records]
     dbf.unload()
     return objs
 
