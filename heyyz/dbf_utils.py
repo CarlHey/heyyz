@@ -11,6 +11,11 @@ def dbf2objs(filename, encoding='gbk', ignore_case=True):
     return objs
 
 
+def str2objs(attrs, string, *, sep='\t', newline='\n'):
+    rows = string.split(newline)
+    return [heyy.json2obj(dict(zip(attrs, s.split(sep)))) for s in rows]
+
+
 def read_fields(dbf_filename, encoding='gbk'):
     dbf = dbfread.DBF(dbf_filename, encoding)
     return dbf.field_names
