@@ -13,12 +13,15 @@ def dbf2objs(filename, encoding='gbk', ignore_case=True):
 
 def str2objs(attrs, string, *, sep='\t', newline='\n'):
     rows = string.split(newline)
-    if isinstance(attrs, bool):
-        head = rows[0]
-        rows = rows[1:]
+    if not isinstance(attrs, bool):
+        def head(): return attrs
+    elif attrs:
+        title, rows = rows[0].split(sep), rows[1:]
+        def head(): return title
     else:
-        head = attrs
-    return [heyy.json2obj(dict(zip(head, s.split(sep)))) for s in rows]
+        from itertools import cycle
+        def head(): return (f'{v}{i + 1}' for i, v in enumerate(cycle('a')))
+    return [heyy.json2obj(dict(zip(head(), s.split(sep)))) for s in rows]
 
 
 def read_fields(dbf_filename, encoding='gbk'):
