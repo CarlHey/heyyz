@@ -1,8 +1,6 @@
 import heyy
 import dbfread
 
-pt = heyy.pathtool
-
 
 def dbf2objs(filename, encoding='gbk', ignore_case=True):
     dbf = dbfread.DBF(filename, encoding)
@@ -21,7 +19,7 @@ def str2objs(attrs, string, *, sep='\t', newline='\n'):
     else:
         from itertools import cycle
         def head(): return (f'{v}{i + 1}' for i, v in enumerate(cycle('a')))
-    return [heyy.json2obj(dict(zip(head(), s.split(sep)))) for s in rows]
+    return [heyy.json2obj(zip(head(), s.split(sep))) for s in rows]
 
 
 def read_fields(dbf_filename, encoding='gbk'):

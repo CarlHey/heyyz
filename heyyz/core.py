@@ -7,7 +7,7 @@ from .dbf_utils import (
     split_multiline,
 )
 
-pt = heyy.pathtool
+pt = heyy.pt
 dbf2objs = dbf2objs
 str2objs = str2objs
 read_fields = read_fields
