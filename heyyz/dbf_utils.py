@@ -9,7 +9,8 @@ def dbf2objs(filename, encoding='gbk', ignore_case=True):
     return objs
 
 
-def str2objs(attrs, string, *, sep='\t', newline='\n'):
+def str2objs(attrs, string, *, sep='\t', newline='\n', ignore_title_case=False):
+    _class = heyy.DictObj if not ignore_title_case else heyy.CaseInsensitiveDictObj
     rows = string.split(newline)
     if not isinstance(attrs, bool):
         def head(): return attrs
@@ -19,7 +20,7 @@ def str2objs(attrs, string, *, sep='\t', newline='\n'):
     else:
         from itertools import cycle
         def head(): return (f'{v}{i + 1}' for i, v in enumerate(cycle('a')))
-    return [heyy.json2obj(zip(head(), s.split(sep))) for s in rows]
+    return [_class(zip(head(), s.split(sep))) for s in rows]
 
 
 def read_fields(dbf_filename, encoding='gbk'):
