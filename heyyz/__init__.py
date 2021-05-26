@@ -4,6 +4,7 @@ from .core import *
 __all__ = [
     'pt',
     'dbf2objs',
+    'try_dbf2objs',
     'str2objs',
     'read_fields',
     'compare_fields',
