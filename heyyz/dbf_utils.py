@@ -9,6 +9,37 @@ def dbf2objs(filename, encoding='gbk', ignore_case=True):
     return objs
 
 
+def _convert_encoding(s: str, from_encoding: str, to_encoding: str):
+    if not isinstance(s, str):
+        return s
+    try:
+        result = s.encode(from_encoding).decode(to_encoding)
+    except (UnicodeDecodeError, UnicodeEncodeError):
+        result = s
+    return result
+
+
+_FALLBACK_ENCODING = 'latin1'
+
+
+def try_dbf2objs(filename, encoding='gbk', ignore_case=True):
+    try:
+        return dbf2objs(filename, encoding, ignore_case)
+    except UnicodeDecodeError:
+        pass
+    latin1_objs = dbf2objs(filename, encoding=_FALLBACK_ENCODING, ignore_case=ignore_case)
+
+    def _convert_obj(obj: heyy.DictObj):
+        o = heyy.json2obj(ignore_case=ignore_case)
+        for k, v in obj.items():
+            k = _convert_encoding(k, _FALLBACK_ENCODING, encoding)
+            v = _convert_encoding(v, _FALLBACK_ENCODING, encoding)
+            o[k] = v
+        return o
+
+    return [_convert_obj(o) for o in latin1_objs]
+
+
 def str2objs(attrs, string, *, sep='\t', newline='\n', ignore_title_case=False):
     _class = heyy.DictObj if not ignore_title_case else heyy.CaseInsensitiveDictObj
     rows = string.split(newline)
